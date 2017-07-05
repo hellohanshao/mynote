@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="noteNew"
+  id="myeclipse.1495078207049"
+  context-root="/note"
+  j2ee-spec="6.0"
+  archive="noteNew.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

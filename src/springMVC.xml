@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+xmlns:mvc="http://www.springframework.org/schema/mvc" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:p="http://www.springframework.org/schema/p" 
+xmlns:context="http://www.springframework.org/schema/context" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+http://www.springframework.org/schema/tx     
+http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+http://www.springframework.org/schema/aop     
+http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-4.3.xsd
+http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+
+	<!-- 开启controller注解支持 只扫描controller注解 -->  
+    <context:component-scan base-package="com.note.controller" use-default-filters="false">  
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />  
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />  
+    </context:component-scan>  
+    <!--使用RequestMappingHandlerMapping解析器必须使用下面的注解，否则报错  -->
+    <!--No adapter for handler xxx The DispatcherServlet configuration needs to include a HandlerAdapter that supports this handler    -->
+    <mvc:annotation-driven />  
+
+
+	<!-- 避免IE执行AJAX时,返回JSON出现下载文件   sprig3.xMappingJacksonHttpMessageConverter,spring4.x是MappingJackson2HttpMessageConverter -->
+	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>  
+
+<!-- 配置freeMarker视图解析器 -->    
+    <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">    
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>    
+        <property name="contentType" value="text/html; charset=utf-8"/>    
+        <property name="cache" value="true" />    
+        <property name="suffix" value=".ftl" />    
+        <property name="order" value="0"/>    
+    </bean>    
+    <!-- ftl参数配置 -->  
+    <bean id="freemarkerConfiguration"  
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">  
+        <property name="location" value="/WEB-INF/freemarker.properties" />  
+    </bean>  
+    <!-- 配置freeMarker的模板路径 -->    
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">    
+        <property name="templateLoaderPath">    
+            <value>/WEB-INF/pages/</value>    
+        </property>    
+        <property name="freemarkerVariables">    
+            <map>    
+                <entry key="xml_escape" value-ref="fmXmlEscape" />    
+            </map>    
+        </property>    
+        <property name="defaultEncoding">    
+            <value>utf-8</value>    
+        </property>    
+        <property name="freemarkerSettings">    
+            <props>    
+                <prop key="template_update_delay">0</prop>    
+            </props>    
+        </property>    
+    </bean>    
+
+
+	
+<!--spring的默认策略中并不包含SimpleServletHandlerAdapter，所以在使用时需要明确声明  此时web.xml中无需声明servlet配置。-->
+<!-- 管理servlet、可以将servlet像普通bean一样声明到spring配置文件中，而无需在web.xml中声明 -->
+<!-- <bean id="servletHandlerAdapter"  class="org.springframework.web.servlet.handler.SimpleServletHandlerAdapter" />  -->
+
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	<!--当用InternalResourceViewResolver视图解析器时，该JstlView属性可以省略  -->
+<!--
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+  		 <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />           
+ 		 <property name="prefix" value="/WEB-INF/pages/"/>
+  		<property name="suffix" value=".jsp"/>  
+ 	</bean>
+ -->	
+ 
+	 <!-- jsp page related... start -->  
+    <bean id="viewResolver"  class="org.springframework.web.servlet.view.UrlBasedViewResolver">  
+        <property name="viewClass"  value="org.springframework.web.servlet.view.JstlView" /> <!--使用UrlBasedViewResolver的解析器时候不能省略JstlView  --> 
+        <property name="prefix" value="/WEB-INF/pages/" />  
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="1"/>  
+    </bean>  
+    <!-- jsp page related... end -->  
+	
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<property name="maxUploadSize">
+			<value>32505856</value><!-- 上传文件大小限制为31M，31*1024*1024 -->
+		</property>
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+	</bean>
+</beans>

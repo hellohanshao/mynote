@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.note.dao.SettingMapper">
+	<resultMap id="ResultMap" type="com.note.model.Setting">
+		<id column="ID" property="id" jdbcType="NUMERIC"/>
+		<result column="SETNAME" property="setname" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="CHAR" />
+		<result column="RELATION" property="relation" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="getObjectList" resultMap="ResultMap">
+		SELECT	* FROM SETTING WHERE STATUS='1' ORDER BY ID ASC
+	</select>
+	
+	<select id="getObject" resultMap="ResultMap">
+		SELECT	* FROM SETTING WHERE ID = #{0} AND STATUS='1' 
+	</select>
+	
+	
+	
+</mapper>

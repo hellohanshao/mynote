@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.note.dao.TitleMapper">
+	<resultMap id="TitleresultMap" type="com.note.model.Title">
+		<id column="ID" property="id" jdbcType="NUMERIC"/>
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="TITLESTATUS" property="titleStatus" jdbcType="CHAR" />
+		<result column="RELATION" property="relation" jdbcType="CHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="ISDEFAULTLOAD" property="isdefaultload" jdbcType="CHAR" />
+	</resultMap>
+	<parameterMap id="TitleParamMap"  type="com.note.model.Title">
+		<parameter property="id" jdbcType="NUMERIC"/>
+		<parameter property="title" jdbcType="VARCHAR" />
+		<parameter  property="titleStatus" jdbcType="CHAR" />
+		<parameter property="relation" jdbcType="CHAR" />
+		<parameter property="remark" jdbcType="VARCHAR" />
+		<parameter property="isdefaultload" jdbcType="CHAR" />
+		
+	</parameterMap>
+	<select id="getTitleList" resultMap="TitleresultMap">
+		select	* from Title where titlestatus='1'
+	</select>
+	
+	<select id="getTitle" resultMap="TitleresultMap">
+		select	* from title where id = #{0}
+	</select>
+	
+	<insert id="insertTitleOne">
+		INSERT INTO Title (TITLE,TITLESTATUS,RELATION,REMARK,ISDEFAULTLOAD) VALUES (#{title},#{titleStatus},#{relation},#{remark,jdbcType=VARCHAR},#{isdefaultload}) 
+	</insert>
+	
+	<update id="updateTitleOne">
+			update Title
+		<set>
+			<if test="title.title!=null and title.titlestatus!=null and title.relation!=null ">
+				title=#{title.title},remark=#{title.remark} 
+			</if>
+		</set>
+		 where id=#{id}
+	
+	</update>
+	<delete id="deleteTitleOne">
+		UPDATE Title SET TITLESTATUS='0' WHERE ID=#{0} 
+	</delete>
+	<delete id="deleteTitleOneReal">
+		DELETE FROM TITLE WHERE ID=#{0} 
+	</delete>
+</mapper>

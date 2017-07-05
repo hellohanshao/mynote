@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.note.dao.DetailMapper">
+	<resultMap id="DetailResultMap" type="com.note.model.Detail">
+		<id column="ID" property="id" jdbcType="NUMERIC"/>
+		<result column="DETAILNAME" property="detailname" jdbcType="VARCHAR" />
+		<result column="DETAILSTATUS" property="detailstatus" jdbcType="CHAR" />
+		<result column="RELATION" property="relation" jdbcType="CHAR" />
+		<result column="DETAIL" property="detail" jdbcType="VARCHAR" />
+		<result column="DETAILTYPE" property="detailtype" jdbcType="VARCHAR" />
+		<result column="SAVEPATH" property="savepath" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getDetailList" resultMap="DetailResultMap">
+		SELECT	* FROM DETAIL WHERE DETAILSTATUS='1'
+	</select>
+	
+	<select id="getDetail" resultMap="DetailResultMap">
+		SELECT	* FROM DETAIL WHERE ID = #{0} AND DETAILSTATUS='1'
+	</select>
+	
+	<select id="getDetailByMasterID" resultMap="DetailResultMap">
+		SELECT	* FROM DETAIL WHERE RELATION = #{0} AND DETAILSTATUS='1'
+	</select>
+	
+	<select id="getDetailByArr" resultMap="DetailResultMap">
+	
+	<!--relation字符串类型 传入的是数组  -->
+		SELECT	* FROM DETAIL WHERE RELATION IN 
+		<foreach collection="array" item="item" open="(" separator="," close=")" index="index">
+			#{item}
+		</foreach>
+		AND DETAILSTATUS='1' 
+	</select>
+	
+	<insert id="insertDetailOne">
+		INSERT INTO DETAIL (DETAILNAME,DETAILSTATUS,RELATION,DETAIL,DETAILTYPE,SAVEPATH) VALUES (#{detail},#{detailstatus},#{relation},#{detail,jdbcType=VARCHAR},#{detailtype},#{savepath}) 
+	</insert>
+	
+	<update id="updateDetailOne">
+			UPDATE DETAIL 
+		<set>
+			<if test="detail.detailname!=null ">
+				DETAILNAME=#{detail.detailname},detail=#{detail.detail} 
+			</if>
+		</set>
+		 WHERE ID=#{id} AND DETAILSTATUS='1'
+	
+	</update>
+	<delete id="deleteDetailOne">
+		UPDATE Detail SET DETAILSTATUS='0' WHERE ID=#{0} 
+	</delete>
+	<delete id="deleteDetailOneReal">
+		DELETE FROM DETAIL WHERE ID=#{0} 
+	</delete>
+</mapper>

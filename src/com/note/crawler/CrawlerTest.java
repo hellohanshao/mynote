@@ -21,7 +21,6 @@ public class CrawlerTest  implements PageProcessor{
 	    @Override
 	    public void process(Page page) {
 //	    	page.addTargetRequests(page.getHtml().links().regex("http://localhost:8080/mynote/index/\\w+\\.do?\\w+=\\d+\\&\\w+=\\d+").all());
-	    	page.addTargetRequests(page.getHtml().links().regex("http://cl.7x2.co/thread\\d+.php?fid=\\d+").all());
 	    	System.out.println("================");//
 	        page.putField("name", page.getHtml().xpath("//a/text()").all());
 	        System.out.println(page.getResultItems().get("name")+"===============");

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.note.dao.SubTitleMapper">
+	<resultMap id="SubTitleResultMap" type="com.note.model.SubTitle">
+		<id column="ID" property="id" jdbcType="NUMERIC"/>
+		<result column="SUBTITLE" property="subtitle" jdbcType="VARCHAR" />
+		<result column="SUBTITLESTATUS" property="subtitlestatus" jdbcType="CHAR" />
+		<result column="RELATION" property="relation" jdbcType="CHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<parameterMap id="SubTitleParamMap"  type="com.note.model.SubTitle">
+		<parameter property="id" jdbcType="NUMERIC"/>
+		<parameter property="subtitle" jdbcType="VARCHAR" />
+		<parameter  property="subtitlestatus" jdbcType="CHAR" />
+		<parameter property="relation" jdbcType="CHAR" />
+		<parameter property="remark" jdbcType="VARCHAR" />
+		
+	</parameterMap>
+	<select id="getSubTitleList" resultMap="SubTitleResultMap">
+		select	* from SubTitle where subtitlestatus='1'
+	</select>
+	
+	<select id="getSubTitle" resultMap="SubTitleResultMap">
+		select	* from subtitle where id = #{0}
+	</select>
+	
+	<select id="getSubTitleByMasterID" resultMap="SubTitleResultMap">
+		select	* from subtitle where relation = #{0}
+	</select>
+	
+	
+	<select id="getSubTitleByArr" resultMap="SubTitleResultMap">
+	
+	<!--relation字符串类型 传入的是数组  -->
+		select	* from subtitle where relation in 
+		<foreach collection="array" item="item" open="(" separator="," close=")" index="index">
+			#{item}
+		</foreach>
+		and subtitlestatus='1' 
+	</select>
+	
+	<insert id="insertSubTitleOne">
+		INSERT INTO SubTitle (SUBTITLE,SUBTITLESTATUS,RELATION,REMARK) VALUES (#{subtitle},#{subtitlestatus},#{relation},#{remark,jdbcType=VARCHAR}) 
+	</insert>
+	
+	<update id="updateSubTitleOne">
+			update SubTitle
+		<set>
+			<if test="subtitle.subtitle!=null ">
+				subtitle=#{subtitle.subtitle},remark=#{subtitle.remark} 
+			</if>
+		</set>
+		 where id=#{id}
+	
+	</update>
+	<delete id="deleteSubTitleOne">
+		UPDATE SUBTITLE SET SUBTITLESTATUS='0' WHERE ID=#{0} 
+	</delete>
+	<delete id="deleteSubTitleOneReal">
+		DELETE FROM SUBTITLE WHERE ID=#{0} 
+	</delete>
+</mapper>

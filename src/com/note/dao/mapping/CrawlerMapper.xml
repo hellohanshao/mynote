@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.note.dao.CrawlerMapper">
+	<resultMap id="resultMap" type="com.note.model.crawler.Crawler">
+		<id column="ID" property="id" jdbcType="NUMERIC"/>
+		<result column="NUM" property="num" jdbcType="NUMERIC"/>
+		<result column="THREADNUM" property="threadnum" jdbcType="NUMERIC"/>
+		<result column="IFAHEAD" property="ifahead" jdbcType="NUMERIC"/>
+		<result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+		<result column="HELPURL" property="helpurl" jdbcType="VARCHAR" />
+		<result column="TARGETURL" property="targeturl" jdbcType="VARCHAR" />
+		<result column="CSS" property="css" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="RELATION" property="relation" jdbcType="CHAR" />
+		<result column="SAVEPAGE" property="savepage" jdbcType="CHAR" />
+		<result column="STARTTIME" property="starttime" jdbcType="TIMESTAMP" />
+		<result column="ENDTTIME" property="endttime" jdbcType="TIMESTAMP" />
+		<result column="TYPE" property="type" jdbcType="CHAR" />
+		<result column="NAMEREGEX" property="nameregex" jdbcType="VARCHAR" />
+		<result column="CONTENTREGEX" property="contentregex" jdbcType="VARCHAR" />
+		<result column="URLREGEX" property="urlregex" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getAll" resultMap="resultMap">
+		SELECT	* FROM CRAWLER 
+	</select>
+	 
+	<select id="getOne" resultMap="resultMap">
+		SELECT	* FROM CRAWLER WHERE ID = #{0}
+	</select>
+	
+	<insert id="insertOne">
+		INSERT INTO CRAWLER (NUM,THREADNUM,IFAHEAD,KEYWORD,HELPURL,TARGETURL,CSS,STATUS,RELATION,SAVEPAGE,STARTTIME,ENDTTIME,TYPE,NAMEREGEX,CONTENTREGEX,URLREGEX) VALUES 
+		(#{num},#{threadnum},#{ifahead},#{keyword,jdbcType=VARCHAR},#{helpurl,jdbcType=VARCHAR},#{targeturl,jdbcType=VARCHAR},#{css,jdbcType=VARCHAR},
+		#{status,jdbcType=CHAR},#{relation,jdbcType=CHAR},#{savepage,jdbcType=CHAR},#{starttime,jdbcType=TIMESTAMP},
+		#{endttime,jdbcType=TIMESTAMP},#{type,jdbcType=VARCHAR},#{nameregex,jdbcType=VARCHAR},#{contentregex,jdbcType=VARCHAR},#{urlregex,jdbcType=VARCHAR})  
+	</insert>
+	
+	<delete id="deleteOne">
+		DELETE FROM  CRAWLER  WHERE ID=#{0} 
+	</delete>
+</mapper>

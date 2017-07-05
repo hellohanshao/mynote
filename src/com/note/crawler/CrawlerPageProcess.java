@@ -38,7 +38,6 @@ public class CrawlerPageProcess implements PageProcessor{
 		Data data = new Data();
 		//http https 
 		//将获取到的页面url加入到后续队列中
-		//获取需要的标题; 
 		/* page.putField("name", page.getHtml().xpath(crawler.getNameregex()+"text()").get());
 		 //获取所需要的内容
 		 page.putField("content", page.getHtml().xpath(crawler.getContentregex()+"text()").get());*/

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jms="http://www.springframework.org/schema/jms"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:task="http://www.springframework.org/schema/task" 
@@ -17,17 +18,24 @@
 	http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 	http://www.springframework.org/schema/util
 	http://www.springframework.org/schema/util/spring-util-4.3.xsd
+	http://www.springframework.org/schema/jms  
+    http://www.springframework.org/schema/jms/spring-jms-4.3.xsd 
 	http://www.springframework.org/schema/task
-	http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+	http://www.springframework.org/schema/task/spring-task-4.3.xsd
+	http://activemq.apache.org/schema/core  
+    http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd">
+	
 	
 	<context:component-scan base-package="com.note.service" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
-
-	<!-- 自动扫描(自动注入) -->
-	<!-- <context:component-scan base-package="com.note.service" /> -->
+	<context:component-scan base-package="com.note.mq" />
 	
-	<!-- 引入属性文件 -->
+  
+  
+  
+  
+  <!-- 引入属性文件 -->
 	<context:property-placeholder location="classpath:db.properties" />
 	
 	<!-- 加入dbcp数据源 -->
@@ -67,4 +75,52 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	
+	
+	
+  <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">  
+        <property name="brokerURL" value="tcp://localhost:61616"/>  
+        <property name="userName" value="admin"/>  
+        <property name="password" value="admin"/>  
+    </bean> 
+  
+  <!--配置JMS连接工厂，session缓存大小  -->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">  
+        <constructor-arg ref="targetConnectionFactory" />  
+        <property name="sessionCacheSize" value="100" />  
+    </bean>  
+    
+    <!-- 消息处理器  该转换器是一对一传输-->  
+    <bean id="jmsMessageConverter" class="org.springframework.jms.support.converter.SimpleMessageConverter" />  
+  
+  	<!-- 一般的mq需要定义一对一队列和订阅队列，然后引用系统自带的转换器，或者自定义的 -->
+  
+    <!-- ====Producer side start==== -->  
+    <!-- 定义JmsTemplate的Queue类型  Spring提供的JMS工具类，它可以进行消息发送、接收等-->  
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">  
+     <property name="connectionFactory" ref="connectionFactory"/>  
+     
+    </bean>  
+    
+     <bean id="producerService" class="com.note.mq.ProducerServiceImpl">  
+        <property name="jmsTemplate" ref="jmsTemplate"></property>  
+        <property name="destination" value="noteQueue"></property>  
+    </bean>  
+    
+  
+ <!-- 消息监听容器 -->  
+    <jms:listener-container container-type="default"  
+                            connection-factory="connectionFactory" acknowledge="transacted"  
+                            concurrency="10-50">  
+        <jms:listener destination="noteQueue" ref="noteMessageListener"  
+                      method="onMessage" />  
+  
+    </jms:listener-container>  
+                      
+    
+    <!-- 定义消息监听器，用于用于监听生产者和消费者消息-->
+    <bean id="noteMessageListener" class="com.note.mq.NoteMessageListener"></bean>
+    
+    
 </beans>

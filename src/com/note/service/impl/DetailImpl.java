@@ -23,9 +23,9 @@ public class DetailImpl extends BaseLogger implements IDeatil {
 	@Autowired
 	private DetailMapper subtitle;
 	@Override
-	public List<Detail> getDetailList() {
+	public List<Detail> getDetailList(String page,String pageNUM) {
 		getLogger().info("获取所有标题信息");
-		return subtitle.getDetailList();
+		return subtitle.getDetailList(page,pageNUM);
 	}
 	@Override
 	public Detail getDetail(int id) {
@@ -60,6 +60,10 @@ public class DetailImpl extends BaseLogger implements IDeatil {
 	@Override
 	public List<Detail> getDetailByMasterID(int relation) {
 		return subtitle.getDetailByMasterID(relation);
+	}
+	@Override
+	public List<Detail> getDetailPage(int relation, String page,String defaultNUM) {
+		return subtitle.getDetailPage(relation, page, defaultNUM);
 	}
 	
 }

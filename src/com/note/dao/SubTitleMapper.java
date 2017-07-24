@@ -17,7 +17,7 @@ public abstract interface SubTitleMapper
   
   public abstract void insertSubTitleOne(SubTitle paramSubTitle);
   
-  public abstract void updateSubTitleOne(@Param("id") int paramInt, @Param("subtitle") SubTitle paramSubTitle);
+  public abstract void updateSubTitleOne(@Param("subtitle") SubTitle paramSubTitle);
   
   public abstract void deleteSubTitleOne(int paramInt);
   

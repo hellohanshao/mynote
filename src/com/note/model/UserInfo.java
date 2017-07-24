@@ -20,6 +20,8 @@ public class UserInfo {
 	private String loginouttime;
 	
 	private String remark;
+	
+	private String role;
 
 	/**
 	 * @return the id
@@ -145,6 +147,20 @@ public class UserInfo {
 	 */
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

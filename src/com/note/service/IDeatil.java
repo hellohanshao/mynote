@@ -9,7 +9,7 @@ import com.note.model.Detail;
 public interface IDeatil {
 
 	//获取有效的所有标题,
-	public List<Detail> getDetailList();
+	public List<Detail> getDetailList(String page,String pageNUM);
 	
 	//根据title主键获取subtitle下的title
 	public Detail getDetail(int id);
@@ -18,6 +18,8 @@ public interface IDeatil {
 	public List<Detail> getDetailByArr(int[] id);
 	
 	public List<Detail> getDetailByMasterID(int relation);
+	
+	public List<Detail> getDetailPage(int relation,String page,String defaultNUM);
 	
 	//插入一条标题信息
 	public void insertDetailOne(Detail title);

@@ -21,11 +21,11 @@
 	</select>
 	
 	<select id="getSubTitle" resultMap="SubTitleResultMap">
-		select	* from subtitle where id = #{0}
+		select	* from subtitle where id = #{0} and subtitlestatus='1'
 	</select>
 	
 	<select id="getSubTitleByMasterID" resultMap="SubTitleResultMap">
-		select	* from subtitle where relation = #{0}
+		select	* from subtitle where relation = #{0} and subtitlestatus='1'
 	</select>
 	
 	
@@ -40,17 +40,17 @@
 	</select>
 	
 	<insert id="insertSubTitleOne">
-		INSERT INTO SubTitle (SUBTITLE,SUBTITLESTATUS,RELATION,REMARK) VALUES (#{subtitle},#{subtitlestatus},#{relation},#{remark,jdbcType=VARCHAR}) 
+		INSERT INTO SubTitle (SUBTITLE,SUBTITLESTATUS,RELATION,REMARK) VALUES (#{subtitle,jdbcType=VARCHAR},'1',#{relation,jdbcType=CHAR},#{remark,jdbcType=VARCHAR}) 
 	</insert>
 	
 	<update id="updateSubTitleOne">
 			update SubTitle
 		<set>
 			<if test="subtitle.subtitle!=null ">
-				subtitle=#{subtitle.subtitle},remark=#{subtitle.remark} 
+				subtitle=#{subtitle.subtitle} 
 			</if>
 		</set>
-		 where id=#{id}
+		 where id=#{subtitle.id}
 	
 	</update>
 	<delete id="deleteSubTitleOne">

@@ -8,6 +8,7 @@
 		<result column="RELATION" property="relation" jdbcType="CHAR" />
 		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
 		<result column="ISDEFAULTLOAD" property="isdefaultload" jdbcType="CHAR" />
+		<result column="CONTROLLER" property="controller" jdbcType="VARCHAR" />
 	</resultMap>
 	<parameterMap id="TitleParamMap"  type="com.note.model.Title">
 		<parameter property="id" jdbcType="NUMERIC"/>
@@ -16,6 +17,7 @@
 		<parameter property="relation" jdbcType="CHAR" />
 		<parameter property="remark" jdbcType="VARCHAR" />
 		<parameter property="isdefaultload" jdbcType="CHAR" />
+		<parameter property="controller" jdbcType="VARCHAR" />
 		
 	</parameterMap>
 	<select id="getTitleList" resultMap="TitleresultMap">

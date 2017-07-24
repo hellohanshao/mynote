@@ -1,179 +1,132 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%
-	String context = request.getContextPath();
-	
- %>
+	  pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <%@ include file="../common/common.jsp"%>
 <script type="text/javascript">
+//var detail='';
+var id="${active}";
 var src= '${src}';
-$(function(){ 
-	$(".detailajax").click(function(){
-		$(this).css("color","red");
-		var detailid = $(this).attr("detailid");
-		var subid = $(this).attr("subid");
-		var titleid = $(this).attr("titleid");
-		$.get(src+"/index/detail.do",
-			{subid:subid,id:titleid,detailid:detailid},
-			function(data){
-				$("#detailname").empty();
-				$("#detailname").append(data.detailname);
-				$("#detail").empty();
-				$("#detail").append(data.detail);
-			},"json");
-	});
-	
-	$(".navbar-brand").click(function(){
-		
-		$("#setting").show();
-		$("#nosetting").hide();
-		
-		
-	});
-	
-	
-}) 
-
+//window.onbeforeunload = function() {return ("确认关闭吗？");}
+layui.use(['laypage', 'layer'], function(){
+  var laypage = layui.laypage
+  ,layer = layui.layer;
+  laypage({
+	    cont: 'demo7',
+	    pages: '${sumPage}',
+	    skip: true,
+	    curr:'${currPage}',
+	    jump: function(obj, first){
+	        //得到了当前页，用于向服务端请求对应数据
+	        var curr = obj.curr;
+	        if(first!=true){
+	        	
+	        window.location.href=src+"/index/page.do?page="+curr+"&subid=${subactive}&id=${active}";
+	        }
+	      }
+	  });
+ })
+ 
 </script>
 <style type="text/css">
 .detailajax a:focus{
 	color:red;
 }
+.body{
+	padding: 0px;
+	margin:0px;
+	height: 1000px;
+	width: auto;
+}
+.root{
+	height: 100%;
+	width: 100%;
+	margin:0 auto;
+	overflow: hidden;
+	background-color: #CCE8CF;
+}
+.top{
+	height:60px;;
+	width:100%;
+}
+.center{
+	height:900px;
+	width:100%;
+}
+.bottom{
+	height:40px;
+	width:100%;
+	background-color: #CCE8CF;
+	clear: both;
+}
+.left{
+	width:15%;
+	height:1386px;
+	float:left;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #2B2E37!important;
+    padding-bottom: 100%;
+}
 
-</style>
-		<body>
+.middle{
+	height:auto;
+	width:70%;
+	float:left;
+	padding-left: 5px;
+}
+
+.right{
+	height:1386px;
+	width:15%;
+	float:right;
+	background-color: #393D49;
+	padding-bottom: 1356px;
+	padding-left: 3px;
 	
+}
+.layui-nav-item{
+	z-index: 1000;
+}
+.blogsearch {
+    width: 192px;
+    border: 1px solid #ccc;
+    height: 38px;
+    padding: 7px 30px 7px 7px;
+}
+#btnSubmit {
+    border: 0;
+    background: url("${file}/img/skin-search.png") no-repeat center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 20px;
+    right: 10px;
+    text-indent: -100px;
+    cursor: pointer;
+}
+</style>
+		<body >
+				<div class="root">
+					<div class="top">
 					<%@ include file="../common/main.jsp"%>
-			
-				    <div class="container-fluid">
-				      		<div class="row">
-						       		 <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-faded sidebar"  style="display: none">
-							          <ul class="nav nav-pills flex-column">
-								          <c:forEach items="${subTitleList}" var="f" >
-								          		<li class="nav-item">
-										              <a class="nav-link"  
-										              	<c:if test="${f.id eq  subactive}">style="color:#fff" </c:if>
-									              			href="${src}/index/subtitle.do?subid=${f.id}&id=${active}">${f.subtitle }</a>
-									            </li>
-							              </c:forEach>
-							          </ul>
-						        	</nav>
-					        		<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3" role="main">
-							       		<div class="row" id="nosetting">
-										        <div class="col-sm-8 blog-main">
-											          <div class="blog-post">
-											            <h2 class="blog-post-title" id="detailname"></h2>
-											            <p class="blog-post-meta">20170630 <a href="#">(By)lixiaobo</a></p>
-											            <p id="detail">
-																										
-											            </p>
-											          </div>
-										
-											          <nav class="blog-pagination">
-											            <a class="btn btn-outline-primary" href="#">Older</a>
-											            <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
-											          </nav>
-										        </div>
-							
-										        <div class="col-sm-3 offset-sm-1 blog-sidebar">
-											          <div class="sidebar-module sidebar-module-inset">
-											            <h4>关于</h4>
-											            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-											          </div>
-											          <div class="sidebar-module">
-											            <h4>JAVA学习</h4>
-											            <ol class="list-unstyled">
-											            <c:forEach items="${detailList}" var="f" >
-											              <li><a class="detailajax" detailid="${f.id }" href="#" subid="${subactive }" titleid="${active}" >${f.detailname }JAVA学习下的笔记列表</a></li>
-											            </c:forEach>
-											            </ol>
-											          </div>
-											          <div class="sidebar-module">
-											            <h4>暂且没想到</h4>
-											            <ol class="list-unstyled">
-											              <li><a href="#">GitHub</a></li>
-											              <li><a href="#">Twitter</a></li>
-											              <li><a href="#">Facebook</a></li>
-											            </ol>
-											          </div>
-											    </div>
-							      		</div>
-							      		
-							      		
-				<div id="setting" style="display: none">
-				  <section class="row text-center placeholders">
-					<div class="col-6 col-sm-3 placeholder">
-					  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" width="200" height="200">
-					  <h4>Label</h4>
-					  <div class="text-muted">Something else</div>
 					</div>
-					<div class="col-6 col-sm-3 placeholder">
-					  <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" width="200" height="200">
-					  <h4>Label</h4>
-					  <span class="text-muted">Something else</span>
-					</div>
-					<div class="col-6 col-sm-3 placeholder">
-					  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" width="200" height="200">
-					  <h4>Label</h4>
-					  <span class="text-muted">Something else</span>
-					</div>
-					<div class="col-6 col-sm-3 placeholder">
-					  <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail" width="200" height="200">
-					  <h4>Label</h4>
-					  <span class="text-muted">Something else</span>
-					</div>
-				  </section>
-
-				  <h2>Section title</h2>
-				  <div class="table-responsive">
-					<table class="table table-striped">
-					  <thead>
-						<tr>
-						  <th>#</th>
-						  <th>Header</th>
-						  <th>Header</th>
-						  <th>Header</th>
-						  <th>Header</th>
-						</tr>
-					  </thead>
-					  <tbody>
-						<tr>
-						  <td>1,001</td>
-						  <td>Lorem</td>
-						  <td>ipsum</td>
-						  <td>dolor</td>
-						  <td>sit</td>
-						</tr>
-						<tr>
-						  <td>1,003</td>
-						  <td>libero</td>
-						  <td>Sed</td>
-						  <td>cursus</td>
-						  <td>ante</td>
-						</tr>
-						<tr>
-						  <td>1,007</td>
-						  <td>sagittis</td>
-						  <td>ipsum</td>
-						  <td>Praesent</td>
-						  <td>mauris</td>
-						</tr>
-						
-					  </tbody>
-					</table>
-				  </div>
-				</main>
-			</div>
-				
-				
-				 				 </main>
-				      		</div>
-				      
+				    <div class="center">
+				    		<div class="left">
+				    			<%@ include file="../common/left.jsp"%>
+				    		</div>
+				    		<div class="middle">
+								 <%@ include file="../common/contentlist.jsp"%>
+				    		</div>
+				    		<div class="right">
+				    		</div>
 			        </div>
-	      
+			        <hr style="background-color: gray;">
+			        <div class="bottom">
+			        </div>
 					<%@include file="../common/bottom.jsp" %>
+				</div>
+				<input type="hidden" value="${active }" id="active" >
 		</body>
 </html>

@@ -47,6 +47,7 @@ $(function(){
 	        	<input type="text" name="username" placeholder=" 用户名"/>
 	        	<input type="password" name="password" placeholder=" 密码" ><br>
 	        	<input type="checkbox" checked>
+	        	<input type="text" name="massage"  value="${message }" <c:if test="${empty message  }"> style="display:none" </c:if> />
 	        	<span>七日内免登录</span>
 	        	<a href="javascript:;">登录</a>
 	        </div>
@@ -58,7 +59,7 @@ $(function(){
 	 $(function(){
 		 $('.login-main .content a').on('click',function(){
 			 var form = $('<form>');
-			 form.attr('action','${src}/index.do?id=');
+			 form.attr('action','${src}/login.do');
 			 form.attr('method','post');
 			 $('body').append(form);
 			 $('form').submit();

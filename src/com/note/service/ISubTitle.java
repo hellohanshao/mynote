@@ -7,18 +7,18 @@ public abstract interface ISubTitle
 {
   public abstract List<SubTitle> getSubTitleList();
   
-  public abstract SubTitle getSubTitle(int paramInt);
+  public abstract SubTitle getSubTitle(int ID);
   
-  public abstract List<SubTitle> getSubTitleByArr(int[] paramArrayOfInt);
+  public abstract List<SubTitle> getSubTitleByArr(int[] ID);
   
   //通过主表id去从表中查询数据
   public abstract List<SubTitle> getSubTitleByMasterID(int id);
   
-  public abstract void insertSubTitleOne(SubTitle paramSubTitle);
+  public abstract void insertSubTitleOne(SubTitle SubTitle);
   
-  public abstract void updateSubTitleOne(int paramInt, SubTitle paramSubTitle);
+  public abstract void updateSubTitleOne(SubTitle SubTitle);
   
-  public abstract void deleteSubTitleOne(int paramInt);
+  public abstract void deleteSubTitleOne(int ID);
   
-  public abstract void deleteSubTitleOneReal(int paramInt);
+  public abstract void deleteSubTitleOneReal(int ID);
 }

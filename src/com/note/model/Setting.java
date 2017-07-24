@@ -14,6 +14,19 @@ public class Setting {
 	private String remark;
 	private String status;
 	private Timestamp createtime;
+	private String controller;
+	/**
+	 * @return the controller
+	 */
+	public String getController() {
+		return controller;
+	}
+	/**
+	 * @param controller the controller to set
+	 */
+	public void setController(String controller) {
+		this.controller = controller;
+	}
 	/**
 	 * @return the id
 	 */

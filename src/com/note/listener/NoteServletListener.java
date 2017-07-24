@@ -18,6 +18,10 @@ import com.note.util.NoteApplicationContext;
 public class NoteServletListener implements ServletContextListener {
 	
 	public static Logger _logger=Logger.getLogger(NoteServletListener.class);
+	
+	public static int constant=5;
+	
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 

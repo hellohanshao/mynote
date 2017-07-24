@@ -1,0 +1,6 @@
+1、activemq服务
+D:\服务器\apache-activemq-5.14.5-bin\apache-activemq-5.14.5\bin\win64\activemq.bat
+
+2、
+oracle服务
+net start  OracleServiceORCL

@@ -9,18 +9,13 @@ public interface ProducerService {
      * @param destination 
      * @param message 
      */  
-    public void sendMessage(Destination destination, final String message);  
+    public void sendMessage(Destination destination,final String message);  
   
     /** 
      * 自定义destination 
      * @param message 
      */  
-    public void sendMessage2(final String message);  
+    public void sendMessage(final String message);  
   
-    /** 
-     *自定义destination + Object对象消息 
-     * @param person 
-     */  
-    public void sendMessage3(String a,String bString);  
     
 }

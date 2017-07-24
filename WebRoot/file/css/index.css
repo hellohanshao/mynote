@@ -181,13 +181,15 @@ Released for free under a Creative Commons Attribution 3.0 License
 .login-main{
 	width: 100%;
 	height: auto;	
-	background: #4488a7 url(../img/main.jpg) no-repeat center;
+	background: #4488a7 url(../img/bg1.jpg) no-repeat center;
+	background-size:cover;
+	overflow:hidden;
 }
 .index-background{
 	min-height: 800px;
     padding-bottom: 0px;
     width: 100%;
-	background:  url("../img/splash-background.svg") repeat scroll 0 0 / 100% 100%;
+	background:  url("../img/splash-background.svg") no-repeat scroll 0 0 / 100% 100%;
 }
 .login-main .header .header_resize{
 	width: 300px;

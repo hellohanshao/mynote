@@ -11,15 +11,23 @@
 		<result column="SAVEPATH" property="savepath" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="getDetailList" resultMap="DetailResultMap">
-		SELECT	* FROM DETAIL WHERE DETAILSTATUS='1'
+	SELECT * FROM ( SELECT	t.*,rownum rn FROM DETAIL t WHERE  rownum &lt;= #{0}*#{1} AND t.DETAILSTATUS='1') 
+		a where a.rn &gt; (#{0}-1)*#{1} ORDER BY a.id DESC  
+		
+		 
 	</select>
 	
 	<select id="getDetail" resultMap="DetailResultMap">
-		SELECT	* FROM DETAIL WHERE ID = #{0} AND DETAILSTATUS='1'
+		SELECT	* FROM DETAIL WHERE ID = #{0} AND DETAILSTATUS='1'ORDER BY ID DESC 
 	</select>
 	
 	<select id="getDetailByMasterID" resultMap="DetailResultMap">
-		SELECT	* FROM DETAIL WHERE RELATION = #{0} AND DETAILSTATUS='1'
+		SELECT	* FROM DETAIL WHERE RELATION = #{0} AND DETAILSTATUS='1' ORDER BY ID DESC 
+	</select>
+	<select id="getDetailPage" resultMap="DetailResultMap"> 
+		SELECT * FROM ( SELECT	t.*,rownum rn FROM DETAIL t WHERE t.RELATION = #{0} AND rownum &lt;= #{1}*#{2} AND t.DETAILSTATUS='1') 
+		a where a.rn &gt; (#{1}-1)*#{2} ORDER BY a.id DESC  
+		
 	</select>
 	
 	<select id="getDetailByArr" resultMap="DetailResultMap">
@@ -33,17 +41,17 @@
 	</select>
 	
 	<insert id="insertDetailOne">
-		INSERT INTO DETAIL (DETAILNAME,DETAILSTATUS,RELATION,DETAIL,DETAILTYPE,SAVEPATH) VALUES (#{detail},#{detailstatus},#{relation},#{detail,jdbcType=VARCHAR},#{detailtype},#{savepath}) 
+		INSERT INTO DETAIL (DETAILNAME,DETAILSTATUS,RELATION,DETAIL,DETAILTYPE,SAVEPATH) VALUES (#{detailname,jdbcType=VARCHAR},1,#{relation,jdbcType=CHAR},#{detail,jdbcType=VARCHAR},#{detailtype,jdbcType=CHAR},#{savepath,jdbcType=VARCHAR}) 
 	</insert>
 	
 	<update id="updateDetailOne">
+			<if test="detail.detailname!=null ">
 			UPDATE DETAIL 
 		<set>
-			<if test="detail.detailname!=null ">
-				DETAILNAME=#{detail.detailname},detail=#{detail.detail} 
-			</if>
+				DETAILNAME=#{detail.detailname},DETAIL=#{detail.detail} 
 		</set>
-		 WHERE ID=#{id} AND DETAILSTATUS='1'
+		 	WHERE ID=#{id} AND DETAILSTATUS='1'
+			</if>
 	
 	</update>
 	<delete id="deleteDetailOne">

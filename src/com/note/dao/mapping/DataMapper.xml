@@ -23,7 +23,7 @@
 	</select>
 	
 	<insert id="insertOne">
-		INSERT INTO DATA (name,content,RELATION,url,page,savetime,status,type) VALUES (#{name,jdbcType=VARCHAR},
+		INSERT INTO DATA (id,name,content,RELATION,url,page,savetime,status,type) VALUES (#{id,jdbcType=NUMERIC},#{name,jdbcType=VARCHAR},
 		#{content,jdbcType=VARCHAR},#{relation,jdbcType=CHAR},#{url,jdbcType=VARCHAR},#{page,jdbcType=VARCHAR},#{savetime,jdbcType=TIMESTAMP},#{status,jdbcType=CHAR},#{type,jdbcType=CHAR}) 
 	</insert>
 	

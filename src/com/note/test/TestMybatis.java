@@ -1,5 +1,6 @@
 package com.note.test;
 
+
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.note.crawler.CrawlerPageProcess;
+import com.note.model.Detail;
 import com.note.mq.ProducerService;
+import com.note.service.IData;
+import com.note.service.IDeatil;
+import com.note.util.OperatorLog;
+
+import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.pipeline.ConsolePipeline;
 
 /**
  * 
@@ -20,20 +29,24 @@ public class TestMybatis {
 
 	private static final Logger logger = Logger.getLogger(TestMybatis.class);
 	
+		@Autowired
+		private IData iData;
+		@Autowired
+		private IDeatil iDeatil;
+		
 	 	@Autowired  
 	    private ProducerService producerService;  
 	 	
 	 	 @Test  
 	     public void testSend2() {  
-	   
-	         for (int i=0; i<10; i++) {  
-	             producerService.sendMessage2( "你好，生产者！这是消息testbatis：" + (i+1));  
-	         }  
+	 		OperatorLog.operator("123456", producerService);
 	         
 	     }  
 
     @Test
 	public void testName() throws Exception {
-		
+    	Detail detail = new Detail();
+    	detail.setDetail("dddd");
+    	iDeatil.insertDetailOne(detail);
 	}
 }

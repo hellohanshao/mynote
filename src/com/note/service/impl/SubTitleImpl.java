@@ -35,10 +35,10 @@ public class SubTitleImpl
     this.subtitle.insertSubTitleOne(title);
   }
   
-  public void updateSubTitleOne(int id, SubTitle title)
+  public void updateSubTitleOne( SubTitle title)
   {
-    getLogger().info("更新子标题id:[" + id + "][title:][" + title + "]");
-    this.subtitle.updateSubTitleOne(id, title);
+    getLogger().info("更新子标题[title:][" + title + "]");
+    this.subtitle.updateSubTitleOne(title);
   }
   
   public void deleteSubTitleOne(int id)

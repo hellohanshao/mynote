@@ -8,6 +8,7 @@
 		<result column="RELATION" property="relation" jdbcType="CHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
 		<result column="CREATETIME" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="CONTROLLER" property="controller" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<select id="getObjectList" resultMap="ResultMap">

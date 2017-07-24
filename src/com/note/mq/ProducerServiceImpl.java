@@ -1,13 +1,17 @@
 package com.note.mq;
 
 import javax.jms.*;  
-import javax.annotation.Resource;  
-  
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
 import org.springframework.jms.core.JmsTemplate;  
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;  
 @Component  
 public class ProducerServiceImpl implements ProducerService {
+	
+	private Logger logger = Logger.getLogger(ProducerServiceImpl.class);
+	
 	private JmsTemplate jmsTemplate;  
     /** 
      * @Param destination: 可以使用mq自带queue，并构造注入一个name 
@@ -16,8 +20,8 @@ public class ProducerServiceImpl implements ProducerService {
     private String destination;  
   
     //destination入参  
-    public void sendMessage(Destination destination, final String message) {  
-        System.out.println("---------------sendMessage生产者发了一个消息：" + message);  
+    public void sendMessage(Destination destination, final String message) {
+    	logger.info(destination+"生产者："+message);
         jmsTemplate.send(destination, new MessageCreator() {  
             public Message createMessage(Session session) throws JMSException {  
                 return session.createTextMessage(message);  
@@ -25,8 +29,8 @@ public class ProducerServiceImpl implements ProducerService {
         });  
     }  
     //destination不入参  
-    public void sendMessage2(final String message) {  
-        System.out.println("---------------sendMessage2生产者发了一个消息：" + message);  
+    public void sendMessage(final String message) {  
+    	logger.info("生产者："+message);
         jmsTemplate.send(destination, new MessageCreator() {  
             @Override  
             public Message createMessage(Session session) throws JMSException {  
@@ -51,10 +55,5 @@ public class ProducerServiceImpl implements ProducerService {
     public void setDestination(String destination) {  
         this.destination = destination;  
     }
-	@Override
-	public void sendMessage3(String a, String bString) {
-		// TODO Auto-generated method stub
-		
-	}  
 
 }

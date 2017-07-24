@@ -17,11 +17,15 @@ public class NoteApplicationContext {
 	public static  ApplicationContext context=null;
 	
 	public static ApplicationContext getWebApplicationContext(ServletContext src) {
-		context = WebApplicationContextUtils.getWebApplicationContext(src);
-		if (context!=null) {
+		ApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(src);
+		if (context==null) {
+			return wac;
+		}
+		return context;
+/*		if (context!=null) {
 			return context;
 		}
 		return null;
-	}
+*/	}
 	
 }

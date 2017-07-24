@@ -1,12 +1,20 @@
 package com.note.crawler;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.sql.Timestamp;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.instrument.classloading.tomcat.TomcatLoadTimeWeaver;
+import org.springframework.stereotype.Component;
+
+import com.note.dao.DataMapper;
 import com.note.model.crawler.Crawler;
 import com.note.model.crawler.Data;
 import com.note.service.ICrawler;
 import com.note.service.IData;
+import com.note.service.impl.DataImpl;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -22,12 +30,19 @@ import us.codecraft.webmagic.processor.PageProcessor;
  */
 public class CrawlerPageProcess implements PageProcessor{
 
-	@Autowired
+
+    private ApplicationContext context;
+
+    public CrawlerPageProcess() {
+        context = new ClassPathXmlApplicationContext("classpath:spring.xml");
+    }
+	
+	
 	private IData iData;
 	
-	private Crawler crawler;
-	private Site site = Site.me().setRetryTimes(3).setSleepTime(10).setTimeOut(100);
+	private Site site = Site.me().setRetryTimes(3).setSleepTime(100).setTimeOut(10000);
 
+	
 	@Override
 	public Site getSite() {
 		return site;
@@ -35,61 +50,45 @@ public class CrawlerPageProcess implements PageProcessor{
 
 	@Override
 	public void process(Page page) {
-		Data data = new Data();
-		//http https 
-		//将获取到的页面url加入到后续队列中
-		/* page.putField("name", page.getHtml().xpath(crawler.getNameregex()+"text()").get());
-		 //获取所需要的内容
-		 page.putField("content", page.getHtml().xpath(crawler.getContentregex()+"text()").get());*/
-		 //保存整个页面
-//		 page.putField("page", page);
-		 
-		 /*page.putField("url", page.getHtml().links().regex(crawler.getTargeturl()).get());
-		 page.addTargetRequests(page.getHtml().links().regex(crawler.getTargeturl()).all());*/
-		 
-       /* if(page.getResultItems().get("name")==null){
-            //skip this page 
-//            page.setSkip(true);
-        	page.putField("name","");
-        	 page.setSkip(true);
-        }
-        if(page.getResultItems().get("content")==null){
-        	page.putField("content","");
-        	 page.setSkip(true);
-        }
-        if(page.getResultItems().get("page")==null){
-        	page.putField("page","");
-        	 page.setSkip(true);
-        }
-        if(page.getResultItems().get("url")==null){
-        	page.putField("url","");
-        	 page.setSkip(true);
-        }*/
-//        data.setPage("saaaaaaaaaaaaaaaaaaaaaaaaad");
-        iData.insertOne(data);
+    	 /* page.addTargetRequests(page.getHtml().links().regex("(https://github\\.com/\\w+/\\w+)").all());
+          page.putField("author", page.getUrl().regex("https://github\\.com/(\\w+)/.*").toString());
+          page.putField("name", page.getHtml().xpath("//h1[@class='entry-title public']/strong/a/text()").toString());
+          if (page.getResultItems().get("name")==null){
+              page.setSkip(true);
+          }
+          page.putField("readme", page.getHtml().xpath("//div[@id='readme']/tidyText()"));*/
+          Data data = new Data();
+          data.setUrl("http");
+          data.setContent("content");
+          data.setStatus("1");
+          
+          data.setSavetime(new Timestamp(System.currentTimeMillis()));
+          data.setPage("q");
+          data.setType("1");
+          data.setRelation("1");
+          data.setName("name");
+          data.setId(5);
+          
+           iData =(IData) context.getBean("dataImpl");
+           iData.insertOne(data);
 	}
 
-	 /**
-	 * @return the crawler
-	 */
-	public Crawler getCrawler(Crawler crawler) {
-		return crawler;
-	}
-
-	/**
-	 * @param crawler the crawler to set
-	 */
-	public void setCrawler(Crawler crawler) {
-		this.crawler = crawler;
-	}
    
 	public static void main(String[] args) {
-    	System.err.println("--------------");
-    	Crawler c  = new Crawler();
-    	c.setTargeturl("http://localhost:8080/mynote/setting.do?id=\\d+");
-    	c.setContentregex("/p/");
-    	c.setNameregex("/a/");
-        Spider.create(new CrawlerPageProcess()).addUrl("http://localhost:8080/mynote/setting.do?id=0").addPipeline(new ConsolePipeline()).thread(2).run();
+		/*DataImpl dataImpl = new DataImpl();
+		Data data = new Data();
+        data.setUrl("http");
+        data.setContent("content");
+        data.setStatus("setStatus");
+        
+        data.setSavetime(new Timestamp(System.currentTimeMillis()));
+        data.setPage("q");
+        data.setType("1");
+        data.setRelation("1");
+        data.setName("name");
+        data.setId(4);
+        dataImpl.insertOne(data);*/
+        Spider.create(new CrawlerPageProcess()).addUrl("https://github.com/code4craft").addPipeline(new ConsolePipeline()).thread(1).run();
         System.err.println("--------------");
     }
     

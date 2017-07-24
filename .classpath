@@ -56,6 +56,9 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activemq-web-5.14.5.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-jms-4.3.2.RELEASE.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-messaging-4.3.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-websocket-4.3.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/json.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ueditor-1.1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/assertj-core-1.5.0.jar"/>
@@ -73,5 +76,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xsoup-0.3.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_79"/>
 	<classpathentry kind="lib" path="D:/服务器/apache-tomcat-7.0.78/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="D:/服务器/apache-tomcat-7.0.78/lib/websocket-api.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

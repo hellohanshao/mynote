@@ -148,6 +148,7 @@ hr{
 				
 					
 					 $(".create_tab").click(function(){
+							 
 								   var fid = $(this).attr("id");
 								   var isAddTab=false;
 								   
@@ -165,7 +166,9 @@ hr{
 								   }
 								  
 								  if(isAddTab==true){
-										  
+											  var index = layer.load(2, {
+												  shade: [0.1,'#fff'] 
+												});
 											   var ifra = $("<iframe class='ifra' id=ifr"+fid+"  ></iframe>")
 											   var laycontent = $(".layui-tab-content")
 											  
@@ -185,6 +188,7 @@ hr{
 													   
 												  
 											   })
+											layer.close(index);
 									  
 								  }
 								  

@@ -179,10 +179,8 @@ Released for free under a Creative Commons Attribution 3.0 License
 }
 /*login样式*/
 .login-main{
-	width: 100%;
-	height: auto;	
-	background: #4488a7 url(../img/bg1.jpg) no-repeat center;
-	background-size:cover;
+	width: auto;
+	height: 100%;	
 	overflow:hidden;
 }
 .index-background{

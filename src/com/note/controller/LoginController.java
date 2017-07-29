@@ -1,45 +1,31 @@
 package com.note.controller;
 
+import java.security.DigestException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.bouncycastle.crypto.digests.SM3Digest;
+import org.bouncycastle.jcajce.provider.digest.SM3;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.note.model.UserInfo;
+import com.note.util.SM3Util;
 
 @Controller
 public class LoginController {
 
 	private Logger log =Logger.getLogger(LoginController.class);
 
-	
-	@ModelAttribute
-	private void  addPage(ModelAndView modelAndView) {
-		modelAndView.setViewName("jsp/login");
-		
-	}
-	 /**
-	  * 用户登出
-	  * @param request
-	  * @return2017年6月30日
-	  */
-	@RequestMapping("/loginOut")
-	public ModelAndView loginOut(ModelAndView modelAndView,  HttpServletRequest request) {
-		log.info("用户登入");
-		return modelAndView ;
-	}
 	
 	/**
 	 * 用户登录
@@ -48,29 +34,53 @@ public class LoginController {
 	 */
 	@RequestMapping(value={"login"},method={RequestMethod.GET})
 	public ModelAndView  loginGet(ModelAndView modelAndView) {
+		
 		Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
-            return new ModelAndView("redirect:/index");
+        	log.info("用户已经登录");
+            return new ModelAndView("redirect:/index.do?id=0");
         }
-        log.info("用户登录");
-		return modelAndView;
+        return new ModelAndView("jsp/login");
 	}
 	
+	//Credentials 证书  Principal用户名
 	@RequestMapping(value={"login"},method={RequestMethod.POST})
-	public ModelAndView  loginPost(UserInfo userInfo) {
+	public ModelAndView  loginPost(@ModelAttribute("userInfo") UserInfo userInfo) {
+		//登录加密、前台 后台各加密一次，保证传输和存储安全
+		
+		//获取当前登录用户
 		 Subject user = SecurityUtils.getSubject();
-	        if (!user.isAuthenticated()) {
-	            UsernamePasswordToken token = new UsernamePasswordToken("", "", true);   // 记住登录
-	            try{
-	                user.login(token);
-	            } catch ( AuthenticationException ae) {
-	                //return new ModelAndView("jsp/login").addObject("message", "密码错误");
+		 String msg="";
+		 //判断是否登录，如果未登录，则登录
+	     //创建用户名/密码验证Token（Web 应用中即为前台获取的用户名/密码）
+		 if (!user.isAuthenticated()) {
+	            UsernamePasswordToken token;
+				try {
+					 //执行登录，如果登录未成功，则捕获相应的异常 // 记住登录
+					token = new UsernamePasswordToken(userInfo.getUsername(),SM3Util.getStr2SM3(userInfo.getPassword()) , true);
+					user.login(token);
+					  return new ModelAndView("redirect:/index.do?id=0");
+				} catch (DigestException e) {
+					log.error(msg=e.getMessage());
+				} catch ( AuthenticationException ae) {
+	            	log.error(msg=ae.getMessage());
 	            }
 	        } 
-	        return new ModelAndView("redirect:/index.do?id=0");
+		 return new ModelAndView("jsp/login").addObject("message", msg);
+	      
 		}
 		
 	
+	
+	@RequestMapping(value={"loginOut"},method={RequestMethod.GET,RequestMethod.POST})
+	public String  loginOut() {
+		
+		Subject subject = SecurityUtils.getSubject();
+		
+		subject.logout();
+		log.info(subject.getPrincipal()+"用户退出");
+        return "/login";
+	}
 		/*private String loginUser(UserInfo user) {  
 	        if (isRelogin(user)) return "SUCC"; // 如果已经登陆，无需重新登录  
 	          

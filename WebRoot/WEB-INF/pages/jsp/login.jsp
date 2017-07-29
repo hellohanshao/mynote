@@ -8,20 +8,24 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <link rel="stylesheet" type="text/css" href="${file}/css/index.css">
- <link rel="stylesheet" type="text/css" href="${file}/css/common.css">
-<script src="${file}/js/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${file}/css/common.css">
+<script src="${file}/js/jquery1.10.2.js"></script>
+<script type="text/javascript"  src="${file}/layui/layui.js"></script>
+
+<script src="${file}/js/core.js"></script>
+<script src="${file}/js/jsbn.js"></script>
+<script src="${file}/js/jsbn2.js"></script>
+<script src="${file}/js/sm3.js"></script>
 <script type="text/javascript">
+
+	
 var num=0;
 var src= '${src}';
-$(function(){
-	$("body").click(function(){
-		num=num+1;
-		if(num==6){
-			window.location=src+"/index/login2.do";
-		}
-	});
+	var layer=null;
+	layui.use('layer', function(){
+		  layer = layui.layer;
+		});
 	
-})
 </script>
 </head>
 <body>
@@ -44,12 +48,13 @@ $(function(){
 	        	<p>登录</p>
 	        </div>
 	        <div class="con">
-	        	<input type="text" name="username" placeholder=" 用户名"/>
-	        	<input type="password" name="password" placeholder=" 密码" ><br>
-	        	<input type="checkbox" checked>
-	        	<input type="text" name="massage"  value="${message }" <c:if test="${empty message  }"> style="display:none" </c:if> />
-	        	<span>七日内免登录</span>
-	        	<a href="javascript:;">登录</a>
+	        	<form action="${src}/login.do"  method="post">
+		        	<input type="text" name="username" placeholder=" 用户名"/>
+		        	<input type="password" name="password" placeholder=" 密码" ><br>
+		        	<input type="checkbox" checked>
+		        	<span>七日内免登录</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<spn style="color:red;" >${message }</spn>
+		        	<a href="javascript:;">登录</a>
+	        	</form>
 	        </div>
 	    </div>
 	  </div>
@@ -58,13 +63,52 @@ $(function(){
 	<script type="text/javascript">
 	 $(function(){
 		 $('.login-main .content a').on('click',function(){
-			 var form = $('<form>');
-			 form.attr('action','${src}/login.do');
-			 form.attr('method','post');
-			 $('body').append(form);
-			 $('form').submit();
+			 var form = $('form');
+			 var passwd = hex_sm3($("input[type='password']").val());
+			 $("input[type='password']")[0].value=passwd;
+			 if(validateInput()){
+				 	$('form').submit();
+				 }
 		 });
+		/*  $(window).keydown(function(event){
+			 if(event.keyCode==13 && srcElement.type=='password'){
+				 var form = $('form');
+				 var passwd = hex_sm3($("input[type='password']").val());
+				 $("input[type='password']")[0].value=passwd;
+				 if(validateInput()){
+					 alert(2);
+				 	$('form').submit();
+				 }
+			 }
+			}); */
 	 }); 
+	 
+	 document.onkeydown = function(){
+		 var event = window.event;
+		 if(!event) event=arguments.callee.arguments[0];
+		 var srcElement=event.srcElement;
+		 if(!srcElement) srcElement=event.target;
+		 if(event.keyCode==13 && srcElement.type=='password'){
+			 var form = $('form');
+			 var passwd = hex_sm3($("input[type='password']").val());
+			 $("input[type='password']")[0].value=passwd;
+			 if(validateInput()){
+			 	$('form').submit();
+			 }
+		 }
+	 } 
+	 
+	 function validateInput(){
+		 if($("input[type='password']")[0].value.length==0){
+			 layer.msg("密码不能为空");
+			 return false;
+		 }
+		 if($("input[name='username']")[0].value.length==0){
+			 layer.msg("用户名不能为空");
+			 return false;
+		 }
+		 return true;
+	 }
 	</script>
 </body>
 </html>

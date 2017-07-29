@@ -15,7 +15,8 @@
 </div>
 <hr>
 <blockquote align="center" bind-form-id="form2" class="layui-elem-quote task-form">任务组明细</blockquote>
-<form class="layui-form " id="form2" style="display:none;"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+<blockquote align="center" bind-form-id="form1" class="layui-elem-quote task-form" >新建任务计划</blockquote>
+<form class="layui-form " id="form1" style="display:none;"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
   
   <div class="layui-form-item">
     <label class="layui-form-label">搜索网站</label>
@@ -162,8 +163,23 @@ layui.use('form', function(){
 			});
 			layer.full(index);
 	})
+	//任务组明细 open bind-form-id="form2"
+	$(".task-form[bind-form-id='form2']").click(function(){
+		var index = layer.open({title:"<p align='center'>任务组明细<p>",
+			  type: 2,
+			  content: 'http://localhost:8080/mynote/set/analy.do?subid=3',
+			  area: ['320px', '195px'],
+			  maxmin: true
+			});
+			layer.full(index);
+	})
 	
-
+	$(".layui-btn.layui-btn-primary[type='reset']").click(function(){
+		$("#date").hide();
+		$("#exit-task").hide();
+	})
+	
+	
 </script>
 </body>
 </html>

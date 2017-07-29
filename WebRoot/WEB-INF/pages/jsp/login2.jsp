@@ -8,19 +8,9 @@
  <link rel="stylesheet" type="text/css" href="${file}/css/signin.css">
  <link rel="stylesheet" type="text/css" href="${file}/css/bootstrap2.css">
 <script src="${file}/js/jquery-3.2.1.min.js"></script>
-<script src="${file}/js/ie10-viewport-bug-workaround.js"></script>
 <script type="text/javascript">
 var num=0;
 var src= '${src}';
-$(function(){
-	$("body").click(function(){
-		num=num+1;
-		if(num==6){
-			window.location=src+"/login.do";
-		}
-	});
-	
-})
 </script>
  </head>
  <body>

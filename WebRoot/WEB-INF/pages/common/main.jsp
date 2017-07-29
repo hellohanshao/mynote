@@ -27,8 +27,5 @@
 						        <a id="btnSearchBlog" target="_blank"></a>
         				</form>
 					 </li>
+					 <li class="layui-nav-item " style="right:2px;float:right;"><a href="javascript:;" id="loginOut">注销</a></li>
 		</ul>
-<script>
-	
-
-</script>

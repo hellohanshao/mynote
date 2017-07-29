@@ -1,6 +1,11 @@
 
 $(function(){
 
+	$("#loginOut").click(function(){
+				$.get(src+"/loginOut.do");
+				window.location.href=src+"/login.do";
+	})
+		
 	 $.contextMenu({
          selector: ".left .layui-nav-item" ,
          items: {
@@ -347,5 +352,23 @@ myChart.setOption(option);*/
 
 })
 
+function ajaxGetOrPost(url,methead,val,process){
+	
+	 var index = layer.load(0, {
+		  shade: [0.1,'#fff'] 
+		});
+	 $.ajax({
+		   url: url,
+		   data: val,
+		   success: function(data){
+			   process;
+		   },
+		   complete:function(data){
+			  layer.close(index);
+			  layer.msg(data);
+		   }
+		 });
+	
+}
 
 

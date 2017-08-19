@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.note.dao.TaskGroupMapper">
+	<resultMap id="TaskGroupResultMap" type="com.note.model.TaskGroup">
+		<id column="ID" property="id" jdbcType="NUMERIC"/>
+		<result column="GROUPNAME" property="groupname" jdbcType="VARCHAR" />
+		<result column="TASKNUMBER" property="tasknumber" jdbcType="NUMERIC" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="ISSTART" property="isstart" jdbcType="CHAR" />
+	</resultMap>
+	
+	<insert id="addTaskGroup" >
+		INSERT INTO TaskGroup (ID, groupname, tasknumber, describe, isstart) VALUES (#{id,jdbcType=NUMERIC},
+		#{groupname,jdbcType=VARCHAR},#{tasknumber,jdbcType=NUMERIC},#{describe,jdbcType=VARCHAR},#{isstart,jdbcType=CHAR}) 
+	</insert>
+	
+	
+	<select id="getTaskGroup" resultMap="TaskGroupResultMap">
+		select	* from TaskGroup where 1=1
+		<if test="groupname!=null and groupname!='' ">
+			AND groupname=#{groupname} 
+		</if>
+		 
+	</select>
+	
+	<select id="getTaskGroupAll" resultMap="TaskGroupResultMap">
+		select	* from TASKGROUP 
+	</select>
+</mapper>

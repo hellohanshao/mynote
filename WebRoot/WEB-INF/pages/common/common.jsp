@@ -9,7 +9,7 @@
 <%-- <script src="${file}/js/jquery-3.2.1.min.js"></script> --%>
 <script src="${file}/js/jquery1.10.2.js"></script>
 <script src="${file}/js/jquery.contextMenu.js"></script>
-<%-- <script src="${file}/js/echarts.js"></script> --%>
+<script src="${file}/js/echarts.js"></script>
 <%-- <script src="${file}/js/bootstrap.js"></script>
 <script src="${file}/js/popper.js"></script> --%>
 <script src="${file}/js/ie10-viewport-bug-workaround.js"></script>
@@ -36,6 +36,15 @@ var form=null;
 layui.use('form', function(){
 	form = layui.form();
 	});
+var laypage=null;
+layui.use(['laypage', 'layer'], function(){
+	  laypage = layui.laypage;
+});
+
+var flow=null;
+layui.use('flow', function(){
+	  flow = layui.flow;
+});
 </script>
 <style type="text/css">
 .layui-main{

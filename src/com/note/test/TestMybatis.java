@@ -1,22 +1,26 @@
 package com.note.test;
 
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.note.crawler.CrawlerPageProcess;
-import com.note.model.Detail;
-import com.note.mq.ProducerService;
-import com.note.service.IData;
-import com.note.service.IDeatil;
-import com.note.util.OperatorLog;
+import com.note.crawler.NotePipeline;
+import com.note.service.ITask;
 
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.ConsolePipeline;
 
 /**
  * 
@@ -29,24 +33,14 @@ public class TestMybatis {
 
 	private static final Logger logger = Logger.getLogger(TestMybatis.class);
 	
-		@Autowired
-		private IData iData;
-		@Autowired
-		private IDeatil iDeatil;
-		
 	 	@Autowired  
-	    private ProducerService producerService;  
+	 	private ITask itask;  
+		@Resource
+		public JdbcTemplate jdbcTemplate; 
 	 	
-	 	 @Test  
-	     public void testSend2() {  
-	 		OperatorLog.operator("123456", producerService);
-	         
-	     }  
 
     @Test
 	public void testName() throws Exception {
-    	Detail detail = new Detail();
-    	detail.setDetail("dddd");
-    	iDeatil.insertDetailOne(detail);
+    	new CrawlerPageProcess().load();
 	}
 }

@@ -49,7 +49,6 @@ public class Data {
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		System.out.println("====================");
 		this.name = name;
 	}
 

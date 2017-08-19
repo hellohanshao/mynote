@@ -27,6 +27,7 @@ layui.use(['laypage', 'layer'], function(){
 	  });
  })
  
+  
 </script>
 <style type="text/css">
 .detailajax a:focus{
@@ -111,16 +112,41 @@ layui.use(['laypage', 'layer'], function(){
 					<div class="top">
 					<%@ include file="../common/main.jsp"%>
 					</div>
-				 <%--    <div class="center">
-				    		<div class="left">
-				    		<%@ include file="../common/left.jsp"%>
-				    		</div>
-				    		<div class="middle">
-								 <%@ include file="../common/contentlist.jsp"%>
-				    		</div>
-				    		<div class="right">
-				    		</div>
-			        </div> --%>
+				    <div class="center">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+  <legend>图片懒加载</legend>
+</fieldset>
+<div class="site-demo-flow" id="LAY_demo3">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/701696736/TB2PNl5ahQa61Bjy0FhXXaalFXa_!!701696736.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/162734861/TB2V5rsX_gc61BjSZFkXXcTkFXa_!!162734861.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i4/69476562/TB2htq4XTka61BjSszfXXXN8pXa_!!69476562.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i1/180558071/TB2sy6jXMQc61BjSZFGXXa1DFXa_!!180558071.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/701696736/TB2PNl5ahQa61Bjy0FhXXaalFXa_!!701696736.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i3/285892163/TB2qu2HX9Zb61BjSZPfXXaU.pXa_!!285892163.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/704998060/TB2S.gAXTgc61BjSZFkXXcTkFXa_!!704998060.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i3/117202952/TB25lckX_AX61Bjy0FcXXaSlFXa_!!117202952.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/162734861/TB2qijoX9Zb61BjSZPfXXaU.pXa_!!162734861.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i3/96216586/TB2S7EfXHMc61BjSZFFXXaDLFXa_!!96216586.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i8/TB1jSSFNFXXXXcoXFXXYXGcGpXX_M2.SS2_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/162734861/TB2ylbsX37c61BjSZFKXXb6hFXa_!!162734861.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/117202952/TB2FdyZajUd61BjSZPcXXc6hXXa_!!117202952.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i4/777105914/TB2t.qbXZwb61Bjy0FfXXXvlpXa_!!777105914.jpg_400x400q90.jpg?t=1501427012960">
+  <img lay-src="https://gw.alicdn.com/bao/uploaded/i4/TB1XzupNFXXXXcpXXXXXXXXXXXX_!!0-item_pic.jpg_400x400q90.jpg?t=1501427012960">
+</div>
+<script>
+layui.use('flow', function(){
+  var flow = layui.flow;
+ 
+  
+  //按屏加载图片
+  flow.lazyimg({
+    elem: '#LAY_demo3 img'
+    ,scrollElem: '#LAY_demo3' //一般不用设置，此处只是演示需要。
+  });
+  
+});
+</script>
+			        </div>
 			        <hr style="background-color: gray;">
 			        <div class="bottom">
 			        </div>

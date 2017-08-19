@@ -27,7 +27,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
  	@Autowired  
     private UserInfoImpl userService;  
  	
-    public static final String SESSION_USER_KEY = "note";  
+    public static final String SESSION_USER_KEY = "NOTE";  
 	    
 	 /** 
      * 授权操作 
@@ -62,13 +62,13 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		}
         // 获取当前用户的session  
         Session session = SecurityUtils.getSubject().getSession();  
-        /*session.setAttribute(ShiroDbRealm.SESSION_USER_KEY, userInfo);  */ 
+        session.setAttribute(ShiroDbRealm.SESSION_USER_KEY, userInfo);   
         //当前 Realm 的 name  
         String realmName = this.getName();  
         //登陆的主要信息: 可以是一个实体类的对象, 但该实体类的对象一定是根据 token 的 username 查询得到的.  
         Object principal = token.getPrincipal();  
         //密码匹配器
-        return new SimpleAuthenticationInfo(principal, userLogin.getPassword(), realmName);  
+        return new SimpleAuthenticationInfo(principal, userInfo.getPassword(), realmName);  
     }  
 
     //token转userInfo对象

@@ -51,7 +51,7 @@ var src= '${src}';
 
 .middle{
 	height:900px;
-	width:84%;
+	width:85%;
 	float:right;
 }
 
@@ -84,7 +84,7 @@ var src= '${src}';
 	background-color:#009688;
 }
 .ifra{
-	width:1200px;
+	width:100%;
 	height:860px;
 }
 .layui-tab{
@@ -96,7 +96,8 @@ hr{
 }
 .layui-main{
 	
-    margin-left: 20px;
+    margin-left: 5px;
+    width:100%;
 	
 }
 </style>

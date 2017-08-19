@@ -1,97 +1,108 @@
 package com.note.crawler;
 
+import java.util.List;
 
-import java.sql.Timestamp;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.instrument.classloading.tomcat.TomcatLoadTimeWeaver;
-import org.springframework.stereotype.Component;
-
-import com.note.dao.DataMapper;
-import com.note.model.crawler.Crawler;
-import com.note.model.crawler.Data;
-import com.note.service.ICrawler;
-import com.note.service.IData;
-import com.note.service.impl.DataImpl;
+import com.note.constant.TaskAndDataConstant;
+import com.note.dao.TaskMapper;
+import com.note.model.Task;
+import com.note.util.PropertyUtil;
+import com.note.util.SpringBeanFactoryUtils;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.ConsolePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 /**
  * 
- * 日期：2017年7月4日
- * 作者：李小波
- * TODO
+ * 日期：2017年7月4日 作者：李小波 TODO
  */
-public class CrawlerPageProcess implements PageProcessor{
+public class CrawlerPageProcess implements PageProcessor {
+
+	private int retryTimes;
+	private int sleepTime;
+	private int timeOut;
+	private int threadNum;
+	private    Task task ;
+	public CrawlerPageProcess() {
+			super();
+	}
+	public CrawlerPageProcess(Task task) {
+		super();
+		this.task=task;
+		this.retryTimes = Integer.valueOf(PropertyUtil.getProperty("RETRY_TIMES"));
+		this.sleepTime = Integer.valueOf(PropertyUtil.getProperty("SLEEP_TIME"));
+		this.timeOut = Integer.valueOf(PropertyUtil.getProperty("TIMEOUT"));
+		this.threadNum =Integer.valueOf(PropertyUtil.getProperty("THREAD_NUM"));
+	}
 
 
-    private ApplicationContext context;
+	public int getRetryTimes() {
+		return retryTimes;
+	}
 
-    public CrawlerPageProcess() {
-        context = new ClassPathXmlApplicationContext("classpath:spring.xml");
-    }
-	
-	
-	private IData iData;
-	
-	private Site site = Site.me().setRetryTimes(3).setSleepTime(100).setTimeOut(10000);
+	public void setRetryTimes(int retryTimes) {
+		this.retryTimes = retryTimes;
+	}
 
-	
+	public int getSleepTime() {
+		return sleepTime;
+	}
+
+	public void setSleepTime(int sleepTime) {
+		this.sleepTime = sleepTime;
+	}
+
+	public int getTimeOut() {
+		return timeOut;
+	}
+
+	public void setTimeOut(int timeOut) {
+		this.timeOut = timeOut;
+	}
+
+	public int getThreadNum() {
+		return threadNum;
+	}
+
+	public void setThreadNum(int threadNum) {
+		this.threadNum = threadNum;
+	}
+
+	public void setSite(Site site) {
+		this.site = site;
+	}
+
+	// 加载配置来完成
+	private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setTimeOut(10000);
+
 	@Override
 	public Site getSite() {
 		return site;
 	}
 
+
+	// 具体业务处理
 	@Override
 	public void process(Page page) {
-    	 /* page.addTargetRequests(page.getHtml().links().regex("(https://github\\.com/\\w+/\\w+)").all());
-          page.putField("author", page.getUrl().regex("https://github\\.com/(\\w+)/.*").toString());
-          page.putField("name", page.getHtml().xpath("//h1[@class='entry-title public']/strong/a/text()").toString());
-          if (page.getResultItems().get("name")==null){
-              page.setSkip(true);
-          }
-          page.putField("readme", page.getHtml().xpath("//div[@id='readme']/tidyText()"));*/
-          Data data = new Data();
-          data.setUrl("http");
-          data.setContent("content");
-          data.setStatus("1");
-          
-          data.setSavetime(new Timestamp(System.currentTimeMillis()));
-          data.setPage("q");
-          data.setType("1");
-          data.setRelation("1");
-          data.setName("name");
-          data.setId(5);
-          
-           iData =(IData) context.getBean("dataImpl");
-           iData.insertOne(data);
+		System.err.println(""+Thread.currentThread()+Thread.activeCount());
+        page.putField(TaskAndDataConstant.DATA_URL, page.getUrl().regex(task.getPattern()).toString());
+        page.putField(TaskAndDataConstant.DATA_NAME, page.getHtml().xpath(task.getKeyword().toString()).toString());
+        page.putField(TaskAndDataConstant.DATA_PAGE, page.getHtml().xpath("//span[@class='education item']/@title").get());
+        
+        if (page.getResultItems().get(TaskAndDataConstant.DATA_URL)==null || page.getResultItems().get(TaskAndDataConstant.DATA_NAME)==null 
+        		|| page.getResultItems().get(TaskAndDataConstant.DATA_PAGE)==null ){
+        	
+            page.setSkip(true);
+            
+        }
+        page.addTargetRequests(page.getHtml().links().regex(task.getPattern().toString()).all());
+        
 	}
 
-   
-	public static void main(String[] args) {
-		/*DataImpl dataImpl = new DataImpl();
-		Data data = new Data();
-        data.setUrl("http");
-        data.setContent("content");
-        data.setStatus("setStatus");
-        
-        data.setSavetime(new Timestamp(System.currentTimeMillis()));
-        data.setPage("q");
-        data.setType("1");
-        data.setRelation("1");
-        data.setName("name");
-        data.setId(4);
-        dataImpl.insertOne(data);*/
-        Spider.create(new CrawlerPageProcess()).addUrl("https://github.com/code4craft").addPipeline(new ConsolePipeline()).thread(1).run();
-        System.err.println("--------------");
-    }
-    
+	public void load() {
+		NotePipeline pipeline = new NotePipeline();
+		Spider.create(this).addUrl(task.getDomain()).addPipeline(pipeline).thread(threadNum).runAsync();
+	}
 	
-
 }

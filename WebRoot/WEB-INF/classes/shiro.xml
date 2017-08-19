@@ -54,14 +54,24 @@
              <property name="realm" ref="myRealm"/>   
              <property name="sessionMode" value="native" />  
        </bean>  
+       	<!-- There is no session with id [54246477-3b0f-4fa5-8f9e-9e8f6509b732] -->
     	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 			  <!-- 解决session url重写 -->
         	<property name="sessionIdUrlRewritingEnabled" value="false" />
-			<!-- 验证会话时会话的过期时间(毫秒) -->
-			<property name="globalSessionTimeout" value="100" />
+			<property name="globalSessionTimeout" value="1800000"/>  
+	        <property name="deleteInvalidSessions" value="true"/>  
+	        <property name="sessionIdCookieEnabled" value="true"/>  
 		</bean>
-       
-       <!-- 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. -->  
+		
+		<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+	        <constructor-arg value="rememberMe"/>  
+	        <property name="httpOnly" value="true"/>  
+	        <property name="maxAge" value="2592000"/>  
+	        <!-- 30天 -->  
+    	</bean>
+    
+      	 <!-- 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. -->  
         <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  
         
+    
  </beans> 

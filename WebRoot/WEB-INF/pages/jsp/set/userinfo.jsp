@@ -4,11 +4,11 @@
 <html>
 <head>
 <%@ include file="../../common/common.jsp"%>
-<div class="layui-main">
+<div class="layui-main" style="margin-left: 5px;width:100%;">
 	<fieldset class="layui-elem-field">
 		<legend>新增 &amp; 编辑</legend>
 		<div class="layui-field-box">
-			<div class="layui-form">
+			<div class="layui-form" >
 				<div class="layui-form-item admin-item-inline">
 					<div class="layui-inline">
 						<div class="layui-input-inline">

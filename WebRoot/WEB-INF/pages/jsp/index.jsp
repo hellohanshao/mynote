@@ -75,15 +75,19 @@ layui.use(['laypage', 'layer'], function(){
 	width:70%;
 	float:left;
 	padding-left: 5px;
+	 overflow-x: hidden;
+	 overflow-y: hidden;
 }
 
 .right{
 	height:1386px;
-	width:15%;
+	width:14%;
 	float:right;
 	background-color: #393D49;
 	padding-bottom: 1356px;
 	padding-left: 3px;
+	 overflow-x: hidden;
+	 overflow-y: hidden;
 	
 }
 .layui-nav-item{

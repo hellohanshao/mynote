@@ -37,7 +37,6 @@
   
   <!-- 引入属性文件 -->
 	<context:property-placeholder location="classpath:db.properties" />
-	
 	<!-- 加入dbcp数据源 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
@@ -132,14 +131,14 @@
     <!-- 定义消息监听器，用于用于监听生产者和消费者消息-->
     <bean id="noteMessageListener" class="com.note.mq.NoteMessageListener"></bean>
     
-    <bean id="websocket" class="com.note.socket.web.WebsocketEndPoint"/>  
+    <!-- <bean id="websocket" class="com.note.socket.web.WebsocketEndPoint"/>  
 	<websocket:handlers>  
 	    <websocket:mapping path="/websocket" handler="websocket"/>  
 	    <websocket:handshake-interceptors>  
 	   	 <bean class="com.note.socket.web.HandshakeInterceptor"/>  
 	    </websocket:handshake-interceptors>  
-	</websocket:handlers>
+	</websocket:handlers> -->
     
     <import resource="shiro.xml"/>
-    
+    <bean id="springBeanFactoryUtils" class="com.note.util.SpringBeanFactoryUtils"/>
 </beans>

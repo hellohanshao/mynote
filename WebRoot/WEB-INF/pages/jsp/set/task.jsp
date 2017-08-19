@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <%@ include file="../../common/common.jsp"%>
-<title>layui.form小例子</title>
+<title>task</title>
 </head>
 <body>
 <blockquote align="center" class="layui-elem-quote tasking">正在执行任务进度</blockquote>
@@ -16,40 +16,39 @@
 <hr>
 <blockquote align="center" bind-form-id="form2" class="layui-elem-quote task-form">任务组明细</blockquote>
 <blockquote align="center" bind-form-id="form1" class="layui-elem-quote task-form" >新建任务计划</blockquote>
-<form class="layui-form " id="form1" style="display:none;"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+<form class="layui-form " id="form1" style="display:none;" action="taskAdd.do" method="post"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
   
   <div class="layui-form-item">
     <label class="layui-form-label">搜索网站</label>
     <div class="layui-input-block">
-      <input type="text" name="" placeholder="请输入网站域名" autocomplete="off" class="layui-input">
+      <input type="text" name="domain" placeholder="请输入网站域名" autocomplete="off" class="layui-input">
     </div>
      <label class="layui-form-label">匹配格式</label>
     <div class="layui-input-block">
-      <input type="text" name="" placeholder="请输入搜索格式" autocomplete="off" class="layui-input">
+      <input type="text" name="pattern" placeholder="请输入搜索格式" autocomplete="off" class="layui-input">
     </div>
      <label class="layui-form-label">关键字搜索</label>
     <div class="layui-input-block">
-      <input type="text" name="" placeholder="请输入键字，多个关键字以;分割" autocomplete="off" class="layui-input">
+      <input type="text" name="keyword" placeholder="请输入键字，多个关键字以;分割" autocomplete="off" class="layui-input">
     </div>
      <label class="layui-form-label">请输入任务名称</label>
     <div class="layui-input-block">
-      <input type="text" name="" placeholder="请输入任务名称" autocomplete="off" class="layui-input">
+      <input type="text" name="taskname" placeholder="请输入任务名称" autocomplete="off" class="layui-input">
     </div>
   </div>
   <div class="layui-form-item" >
     <label class="layui-form-label">是否加入现有任务中</label>
     <div class="layui-input-block" >
-      <input type="checkbox"  lay-skin="switch" lay-filter="cc">
+      <input type="checkbox"  name="isadd" lay-skin="switch" lay-filter="cc">
     </div>
   </div>
   <div class="layui-form-item" id="exit-task" style="width:300px;display:none">
     <label class="layui-form-label">现有任务</label>
     <div class="layui-input-block">
-     <select name="city" lay-verify="" lay-search>
-		  <option value="010">layer</option>
-		  <option value="021">form</option>
-		  <option value="0571" selected>layim</option>
-		  ……
+     <select name="fid" lay-verify="" lay-search>
+     	<c:forEach items="${groupname }" var="f" >
+		  <option value="${f.groupname}">${f.groupname}</option>
+     	</c:forEach>
 	</select>   
     </div>
   </div>
@@ -57,15 +56,15 @@
   <div class="layui-form-item" >
     <label class="layui-form-label" >是否立即执行</label>
     <div class="layui-input-block">
-      <input type="radio" name="sex" value="0" title="是" checked lay-filter="radio1">
-      <input type="radio" name="sex" value="1" title="否"  lay-filter="radio2">
+      <input type="radio" name="immediately" value="0" title="是" checked lay-filter="radio1">
+      <input type="radio" name="immediately" value="1" title="否"  lay-filter="radio2">
     </div>
   </div>
   
   <div class="layui-form-item" id="date" style="display:none;">
 	  	<label class="layui-form-label" >执行时间</label>
 	  <div class="layui-input-inline">
-	  	<input class="layui-input" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+	  	<input class="layui-input" name="starttime" placeholder="开始时间" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
 	  </div>
 	 <!--  <div class="layui-input-
 	 inline">
@@ -123,7 +122,8 @@ layui.use('form', function(){
 	  var laydate = layui.laydate;
 	  
 	  var start = {
-	    min: laydate.now()
+	    format: 'YYYY-MM-DD'
+	    ,min: laydate.now()
 	    ,max: '2099-06-16 23:59:59'
 	    ,istoday: false
 	    ,choose: function(datas){
@@ -154,10 +154,11 @@ layui.use('form', function(){
 		}
 		
 	})
+	//正在执行的任务
 	$(".tasking").click(function(){
 		var index = layer.open({title:"<p align='center'>正在执行的任务<p>",
 			  type: 2,
-			  content: 'http://localhost:8080/mynote/set/analy.do?subid=3',
+			  content: src+'/set/tasking.do',
 			  area: ['320px', '195px'],
 			  maxmin: true
 			});
@@ -167,7 +168,7 @@ layui.use('form', function(){
 	$(".task-form[bind-form-id='form2']").click(function(){
 		var index = layer.open({title:"<p align='center'>任务组明细<p>",
 			  type: 2,
-			  content: 'http://localhost:8080/mynote/set/analy.do?subid=3',
+			  content: src+"/set/taskgroup.do",
 			  area: ['320px', '195px'],
 			  maxmin: true
 			});

@@ -26,9 +26,20 @@ http://www.springframework.org/schema/task/spring-task-4.3.xsd">
     </context:component-scan>  
     <!--使用RequestMappingHandlerMapping解析器必须使用下面的注解，否则报错  -->
     <!--No adapter for handler xxx The DispatcherServlet configuration needs to include a HandlerAdapter that supports this handler    -->
-    <mvc:annotation-driven />  
+    
+     <mvc:annotation-driven conversion-service="converterUtil" /> 
+	<bean id="converterUtil" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">    
+        <property name="converters">    
+            <list>    
+                <bean class="com.note.handler.DateConverter" />    
+            </list>    
+        </property>  
+    </bean> 
+<!--     <mvc:annotation-driven conversion-service="conversionService" />   -->
 
-
+	<!-- <bean id="conversionService"
+         class="org.springframework.format.support.FormattingConversionServiceFactoryBean">        
+    </bean> -->
 	<!-- 避免IE执行AJAX时,返回JSON出现下载文件   sprig3.xMappingJacksonHttpMessageConverter,spring4.x是MappingJackson2HttpMessageConverter -->
 	<!--  使用fastJson来支持JSON数据格式,其实可以使用别的json转换工具，入fastjson     -->
 	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
@@ -38,6 +49,8 @@ http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 			</list>
 		</property>
 	</bean>
+	
+	
 
 <!-- 使用fastJson来支持JSON数据格式 -->  
   <!--   <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">  
@@ -108,7 +121,11 @@ http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 			</list>
 		</property>
 	</bean>
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		 <property name="webBindingInitializer">
+	        <bean class="com.note.handler.MyDataBinding" />
+	    </property>
+	</bean> -->
 	<!--当用InternalResourceViewResolver视图解析器时，该JstlView属性可以省略  -->
 <!--
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

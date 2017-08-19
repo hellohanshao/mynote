@@ -1,27 +1,32 @@
 package com.note.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
 import com.note.constant.PageConstant;
-import com.note.model.Detail;
+import com.note.crawler.CrawlerPageProcess;
+import com.note.exception.NoteException;
 import com.note.model.Setting;
-import com.note.model.SubTitle;
-import com.note.model.Title;
-import com.note.service.IDeatil;
+import com.note.timer.TimerJob;
+import com.note.model.Task;
+import com.note.model.TaskGroup;
+import com.note.service.IData;
 import com.note.service.ISetting;
-import com.note.service.ISubTitle;
+import com.note.service.ITask;
+import com.note.service.ITaskGroup;
 import com.note.service.ITitle;
+import com.note.service.impl.TaskGroupImpl;
+import com.note.timer.TimerJobGroup;
+import com.note.util.CommonUtil;
 /**
  * 
  * 日期：2017年7月1日
@@ -32,12 +37,23 @@ import com.note.service.ITitle;
 @Controller
 public class SetController extends BaseController{
 	
+	Logger log = Logger.getLogger(SetController.class);
 	
 	@Autowired
 	private ITitle ititle;
 	
 	@Autowired
 	private ISetting iSetting;
+	
+	@Autowired
+	private ITask itask;
+	
+	@Autowired
+	private ITaskGroup itaskGroup;
+	
+	@Autowired
+	private IData idata;
+	
 	
 	
 	@Override
@@ -87,11 +103,77 @@ public class SetController extends BaseController{
 	 * 定时任务
 	 */
 	@RequestMapping(value="task", method={RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView task(@RequestParam ("subid") Integer subid) throws Exception
+	public ModelAndView task(Task task) throws Exception
 	{
 		
-		return commonModelAndView("", subid.toString(),PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+		
+		return commonModelAndView("", "",PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
 				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.TASK_PAGE);
+	}
+	/**
+	 * 
+	 * @param task
+	 * @return
+	 * @throws Exception
+	 */
+	
+	@RequestMapping(value="taskAdd", method={RequestMethod.POST})
+	public ModelAndView taskAdd(Task task)
+	{
+		if(!CommonUtil.isNull(task)){
+			try {
+				itask.addTask(task);
+				if(task.getImmediately().equals("0")){
+					TimerJobGroup.addTaskJob(task,"");
+				}
+			} catch (Exception e) {
+				String str =new StringBuilder().append(e.getMessage()).toString();
+				log.error(str);
+			}
+		}
+		
+		
+		return commonModelAndView("", "",PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.TASK_PAGE);
+	}
+	
+	/**
+	 * 
+	 * 2017年8月16日 上午9:07:28 HS 
+	 * 添加任务组
+	 */
+	@RequestMapping(value="addTaskGroup", method={RequestMethod.POST})
+	public ModelAndView addTaskGroup(TaskGroup taskGroup)
+	{
+		String msg = "";
+		if(!CommonUtil.isNull(taskGroup)){
+			try {
+				itaskGroup.addTaskGroup(taskGroup);
+				msg="添加成功";
+			} catch (Exception e) {
+				msg =new StringBuilder().append(e.getMessage()).toString();
+				log.error(msg);
+			}
+		}
+		ModelAndView model = new ModelAndView(PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.ADD_TASK_PAGE);
+		model.addObject("msg", msg);
+		
+		return model;
+	}
+	/**
+	 * 
+	 * 2017年8月16日 上午9:07:28 HS 
+	 * 添加任务组
+	 */
+	@RequestMapping(value="showTaskGroup", method={RequestMethod.GET})
+	public ModelAndView showTaskGroup()
+	{
+		ModelAndView page = new ModelAndView(PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.ADD_TASK_PAGE);
+		page.addObject("groupname", new TaskGroupImpl().getTaskGroup());
+		
+		return page;
 	}
 	
 	/**
@@ -106,6 +188,55 @@ public class SetController extends BaseController{
 		return commonModelAndView("", subid.toString(), PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
 				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.ANALY_PAGE);
 		
+	}
+	
+	/**
+	 * 
+	 * 日期：2017年7月24日
+	 * 作者：hanshao
+	 * 正在执行的任务
+	 */
+	@RequestMapping(value="tasking", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView tasking() throws Exception
+	{
+		return commonModelAndView("", "", PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.TASKING_PAGE);
+		
+	}
+	/**
+	 * 
+	 * 日期：2017年7月24日
+	 * 作者：hanshao
+	 * 任务组明细
+	 */
+	@RequestMapping(value="taskgroup", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView taskGroup(TaskGroup taskgroup) throws Exception
+	{
+		ModelAndView page = new ModelAndView( PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.TASKGROUP_PAGE);
+		List<TaskGroup> list= new ArrayList<TaskGroup>();
+		if(CommonUtil.isNull(taskgroup.getGroupname())){
+			list = itaskGroup.getTaskGroupAll();
+		}else{
+			list.add(itaskGroup.getTaskGroup(taskgroup));
+		}
+		page.addObject("taskgroup", list);
+		
+		/*TimerJob timerJob  = new TimerJob();
+		TimerJobGroup.addJob(1+"", null, "2", null, timerJob.getClass(), "0 0/2 * * * ?");*/
+		return page;
+	}
+	/**
+	 * 
+	 * 日期：2017年7月24日
+	 * 作者：hanshao
+	 * 任务计划
+	 */
+	@RequestMapping(value="taskplan", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView taskPlan(@RequestParam ("subid") Integer subid) throws Exception
+	{
+		return commonModelAndView("", subid.toString(), PageConstant.PAGE_PREFIX+PageConstant.PAGE_SEPARATOR+
+				PageConstant.SET_PAGE+PageConstant.PAGE_SEPARATOR+PageConstant.TASKPLAN_PAGE);
 	}
 	
 	/**
@@ -138,10 +269,16 @@ public class SetController extends BaseController{
 	
 	private ModelAndView commonModelAndView(String id,String subid,String page) {
 		ModelAndView modelAndView = new ModelAndView(page);
-		List<Setting> setList = iSetting.getObjectList();
-	    modelAndView.addObject("setList", setList);
-	    modelAndView.addObject("subactive", subid);
-	    modelAndView.addObject("active", id);
+		try {
+			List<Setting> setList = iSetting.getObjectList();
+			List<TaskGroup> groupname= itaskGroup.getTaskGroupAll();
+			modelAndView.addObject("setList", setList);
+			modelAndView.addObject("groupname", groupname);
+			modelAndView.addObject("subactive", subid);
+			modelAndView.addObject("active", id);
+		} catch (NoteException e) {
+			e.printStackTrace();
+		}
 	    
 		return modelAndView;
 	}
